@@ -1,0 +1,318 @@
+#-------------------------------------------------------------------------------
+
+# Name:        module1
+
+# Purpose:
+
+#
+
+# Author:      Kieltal
+
+#
+
+# Created:     23/04/2018
+
+# Copyright:   (c) Kieltal 2018
+
+# Licence:     <your licence>
+
+#-------------------------------------------------------------------------------
+
+ 
+
+from itertools import product
+
+ 
+
+def main():
+
+    print('hello')
+
+    pass
+
+ 
+
+ 
+
+def probgen(n):
+
+    colornums = n+2
+
+    listspots = n
+
+    iterables = ''
+
+    for x in range(colornums):
+
+        strX = str(x)
+
+        iterables = iterables + strX
+
+        combos = list(product(iterables,repeat=listspots))
+
+        #print iterables
+
+    return combos
+
+ 
+
+#ignorethisfunction
+
+def matchpos(list1,list2):
+
+    print(len(list1.intersection(list2)))
+
+    print("match")
+
+ 
+
+def SetHints(rowsOfPegs):
+
+    if rowsOfPegs == 3 or rowsOfPegs == 4:
+
+        countOfHints = 4
+
+    else:
+
+        countOfHints = 5
+
+ 
+
+    datasetOuter = []
+
+    for z in range(countOfHints):
+
+        datasetInner = list()
+
+        finalList = list()
+
+        for posi in range(rowsOfPegs):
+
+            rawSetInput = input('Enter Peg Info for Row ' + str(posi) + ': ')
+
+            finalList.append(rawSetInput)
+
+        exactMatches = int(input('How many Position Matches for Row' + str(z) + ': '))
+
+        softMatches = int(input('How many WrongPositions for Row' + str(z) + ': '))
+
+        datasetInner = [finalList,exactMatches,softMatches]
+
+        datasetOuter.append(datasetInner)
+
+    print(datasetOuter)
+
+ 
+
+    return datasetOuter
+
+ 
+
+#Get (item X) from (hintset Y) from user input datasetOuter)
+
+def getItems(itemSet,pegGroup,item):
+
+    #item 0 = the peg colors of hint, 1 = exactmatch, 2 = softmatch
+
+    #in almost all cases itemSet should be whatever datasetOuter is used as
+
+    #defensive programming is bad but w/e
+
+    middleHolder = itemSet[pegGroup]
+
+    innerHolder = middleHolder[item]
+
+    #print(middleHolder,innerHolder)
+
+    return innerHolder
+
+ 
+
+def intersectSoft1(a,b):
+
+    results = list(set(a) & set(b))
+
+    resultsLen = len(results)
+
+    #print(resultsLen)
+
+    return resultsLen
+
+ 
+
+def intersectBoth(a,b):
+
+    list1 = [a]
+
+    list2 = [b]
+
+    resultsofSoft = str(intersectSoft(list1,list2))
+
+    resultsofHard = str(intersectHard(list1,list2))
+
+    #print(resultsofHard + ' ' + resultsofSoft)
+
+    print(a,b)
+
+ 
+
+#def intersectSoft(a,b):
+
+#    list1 = [a]
+
+#    list2 = [b]
+
+#    list3 = []
+
+    #list3 = [value for value in list1 if value in list2]
+
+#    for eachX in range(len(list1)):
+
+#        for eachY in range(len(list2)):
+
+#            if list1[eachX] == list2[eachY]:
+
+#                list3.append(list1[eachX])
+
+#    resultsLen = len(list3)
+
+#    #print(resultsLen)
+
+#    return resultsLen
+
+ 
+
+def intersectSoft(a,b):
+
+    list1 = a
+
+    list2 = list(b) #copy it
+
+    list3 = []
+
+    #list3 = [value for value in list1 if value in list2]
+
+    for eachX in range(len(list1)):
+
+        for eachY in range(len(list2)):
+
+            if list1[eachX] == list2[eachY]:
+
+                list3.append(list1[eachX])
+
+                list2[eachY] = 'z'
+
+                break
+
+    resultsLen = len(list3)
+
+    #print(resultsLen)
+
+    return resultsLen
+
+ 
+
+def intersectHard(a,b):
+
+    results = list()
+
+    for foo in range(len(a)):
+
+        if a[foo] == b[foo]:
+
+            results.append(a[foo])
+
+    resultsLen = len(results)
+
+    #print(resultsLen)
+
+    return resultsLen
+
+ 
+
+def solvePuzzle(comboInput,hints):
+
+    #probablyshould make sure solvePuzzle(combosGoHere,HintsAreFromSetHints)
+
+    answerFound = list()
+
+    for number in range(len(comboInput)):
+
+        loadCombo = comboInput[number]
+
+        #print(loadCombo)
+
+        for hintSet in range(len(hints)):
+
+ 
+
+            loadHintsHard = getItems(hints,hintSet,1)
+
+            loadHintsSoft = getItems(hints,hintSet,2)
+
+            loadHintPegs = getItems(hints,hintSet,0)
+
+ 
+
+            evaluateSoft = intersectSoft(loadCombo,loadHintPegs)
+
+            evaluateHard = intersectHard(loadCombo,loadHintPegs)
+
+            #print(evaluateSoft)
+
+            #print(evaluateHard)
+
+            intersectBoth(loadCombo,loadHintPegs)
+
+            if (loadHintsHard == evaluateHard) and ((loadHintsHard + loadHintsSoft) == evaluateSoft):
+
+                print(loadCombo)
+
+                answerFound.append(loadCombo)
+
+                return answerFound
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+if __name__ == '__main__':
+
+    main()
+
+    #print(probgen(4))
+
+    #lista = {'a','b','c'}
+
+    #listb = {'a','c','f'}
+
+    #matchpos(lista,listb)
+
+    #TakeInput(3)
+
+    initializeProblem = int(input('How Many Pegs?'))
+
+    comboList = probgen(initializeProblem)
+
+    #print(comboList)
+
+ 
+
+    #time to figure out the hints and generate a dataset
+
+    loadSet = SetHints(initializeProblem)
+
+    #time to solve the problem!
+
+    finalAnswer = solvePuzzle(comboList,loadSet)
+
+    print(finalAnswer)
+
